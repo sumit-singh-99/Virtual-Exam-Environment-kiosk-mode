@@ -212,7 +212,7 @@ class ExamWindow(QWidget):
     def update_answer_grid(self):
         for i, btn in enumerate(self.grid_buttons):
             if self.selected_answers[i] is not None:
-                btn.setStyleSheet("background-color: gray; color: white;")
+                btn.setStyleSheet("background-color: #90EE90; color: white;")
             else:
                 btn.setStyleSheet("")
 
@@ -236,10 +236,17 @@ class ExamWindow(QWidget):
 
 
 def run_exam_ui(student_info, on_submit_callback=None):
-    app = QApplication(sys.argv)
+    app = QApplication.instance()
+    if app is None:
+        app = QApplication(sys.argv)
+
     window = ExamWindow(student_info, on_submit_callback)
     window.showFullScreen()
     window.raise_()
     window.activateWindow()
     window.setFocus()
-    sys.exit(app.exec_())
+    
+    # Do NOT call sys.exit() — just exec if you created the QApplication
+    if QApplication.instance() == app:
+        app.exec_()
+
